@@ -1,0 +1,95 @@
+name: pcache
+
+services:
+  minio:
+    image: ${MINIO_IMAGE:-minio/minio}
+    container_name: pcache-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER:-minioadmin}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:-minioadmin123}"
+    volumes:
+      - ./docker-data/quickstart/minio/data:/data
+
+  minio-init:
+    image: ${MINIO_MC_IMAGE:-minio/mc}
+    container_name: pcache-minio-init
+    restart: "no"
+    depends_on:
+      - minio
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER:-minioadmin}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:-minioadmin123}"
+      QUICKSTART_BUCKET: "${QUICKSTART_BUCKET:-minio-test}"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        until mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD"; do
+          sleep 2
+        done
+        mc mb --ignore-existing "local/$$QUICKSTART_BUCKET"
+
+  pms:
+    build:
+      context: .
+      dockerfile: Dockerfile.pms
+      args:
+        MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9-eclipse-temurin-21-noble}
+        JAVA_RUNTIME_IMAGE: ${JAVA_RUNTIME_IMAGE:-eclipse-temurin:21-jre-noble}
+    container_name: pcache-pms
+    restart: unless-stopped
+    depends_on:
+      - minio
+    ports:
+      - "8080:8080"
+    environment:
+      PMS_PORT: "8080"
+      PMS_ENABLE_TOKEN: "false"
+      PMS_ENABLE_WRITE: "false"
+      PMS_AK: "pms-admin"
+      PMS_SK: "QPAAmgJVWUTzrRC9lGDMRJo6mCd4XWK6+tolzsWmgO4="
+      PMS_META_LOADER: "file-loader"
+      PMS_META_DIR: "/opt/pcache/meta/"
+      PMS_SEED_META_DIR: "/opt/pcache/seed-meta"
+      PMS_LOG_DIR: "/opt/pcache/logs/"
+      PMS_PUBLIC_URL: "http://localhost:8080/"
+      PMS_HTTP_HEADER: "http://"
+      PMS_JAVA_OPTS: "-Xms128m -Xmx256m"
+    volumes:
+      - ./docker-data/quickstart/pms/meta:/opt/pcache/meta
+      - ./docker-data/quickstart/pms/logs:/opt/pcache/logs
+      - ./docker/quickstart/meta:/opt/pcache/seed-meta:ro
+
+  pcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.pcp
+      args:
+        MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9-eclipse-temurin-21-noble}
+        JAVA_RUNTIME_IMAGE: ${JAVA_RUNTIME_IMAGE:-eclipse-temurin:21-jre-noble}
+    container_name: pcache-pcp
+    restart: unless-stopped
+    depends_on:
+      - pms
+    ports:
+      - "8091:8091"
+    environment:
+      PCP_PORT: "8091"
+      PCP_AK: "ak-pcp-admin"
+      PCP_SK: "yWlt32Rw6uImzTcAKJ5AZO5Bqw9rPS1YSZKZfgyv3ao="
+      PCP_LOG_DIR: "/opt/pcache/logs/"
+      PCP_DATA_DIR: "/opt/pcache/data/"
+      PCP_PMS_URL: "http://pms:8080/"
+      PCP_PUBLIC_URL: "http://localhost:8091/"
+      PCP_HTTP_HEADER: "http://"
+      PCP_AVAILABLE_SIZE: "10737418240"
+      PCP_BLOCK_CACHE_SIZE: "2147483648"
+      PCP_JAVA_OPTS: "-Xms1g -Xmx4g"
+    volumes:
+      - ./docker-data/quickstart/pcp/data:/opt/pcache/data
+      - ./docker-data/quickstart/pcp/logs:/opt/pcache/logs

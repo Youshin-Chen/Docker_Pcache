@@ -1,0 +1,28 @@
+ARG MAVEN_IMAGE=maven:3.9-eclipse-temurin-21-noble
+ARG JAVA_RUNTIME_IMAGE=eclipse-temurin:21-jre-noble
+
+FROM ${MAVEN_IMAGE} AS builder
+
+WORKDIR /workspace
+
+COPY pc-common/pom.xml /workspace/pc-common/pom.xml
+COPY pc-common/src /workspace/pc-common/src
+COPY pc-pms/pom.xml /workspace/pc-pms/pom.xml
+COPY pc-pms/src /workspace/pc-pms/src
+
+RUN mvn -B -f /workspace/pc-common/pom.xml clean install -DskipTests
+RUN mvn -B -f /workspace/pc-pms/pom.xml clean package -DskipTests
+
+FROM ${JAVA_RUNTIME_IMAGE}
+
+WORKDIR /opt/pcache
+
+COPY docker/pms-entrypoint.sh /usr/local/bin/pms-entrypoint.sh
+COPY --from=builder /workspace/pc-pms/target/pc-pms-0.1.0.jar /opt/pcache/pc-pms.jar
+
+RUN chmod +x /usr/local/bin/pms-entrypoint.sh \
+    && mkdir -p /opt/pcache/meta /opt/pcache/logs
+
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/local/bin/pms-entrypoint.sh"]

@@ -28,6 +28,8 @@ public class Envs {
             "http://", String::valueOf);
     public static String netWorkInterfaceName = ComUtils.getProps("pcp.network.interface.name",
             "", String::valueOf);
+    public static String publicUrl = ComUtils.getProps("pcp.public.url",
+            "", String::valueOf);
 
     // auth
     public static String ak = ComUtils.getProps("pcp.ak",

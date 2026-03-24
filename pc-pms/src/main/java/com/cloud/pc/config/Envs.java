@@ -36,6 +36,8 @@ public class Envs {
             "http://", String::valueOf);
     public static String netWorkInterfaceName = ComUtils.getProps("pms.network.interface.name",
             "", String::valueOf);
+    public static String publicUrl = ComUtils.getProps("pms.public.url",
+            "", String::valueOf);
 
     // auth
     public static Boolean enableToken = ComUtils.getProps("pms.enable.token",

@@ -1,0 +1,1 @@
+{"items":[{"id":1,"name":"minio-test","vendor":"MINIO","region":"local","permission":"private","endpoint":"http://localhost:9000","cdnEndpoint":"","quotaCapacity":-1,"quotaQps":-1,"quotaBandwidth":-1,"createTime":0,"updateTime":0,"accessTime":0}],"checksum":"","lastUpdateTime":0,"empty":false}

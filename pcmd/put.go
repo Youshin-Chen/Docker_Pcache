@@ -35,13 +35,12 @@ func CreatePutCommand(config *Config) *Command {
 		Handler:     handlePut,
 	}
 	putCmd.Flags = flag.NewFlagSet("put", flag.ExitOnError)
-	putCmd.Flags = flag.NewFlagSet("get", flag.ExitOnError)
 	putCmd.Flags.BoolVar(&config.Debug, "debug",
 		config.Debug, "debug mode")
 	putCmd.Flags.BoolVar(&config.IsSmallFile, "small-file",
 		config.IsSmallFile, "size is less than block size, will take special method for performance.")
 	putCmd.Flags.BoolVar(&config.SkipExisting, "skip-existing",
-		config.IsSmallFile, "skip existing file or object")
+		config.SkipExisting, "skip existing file or object")
 	putCmd.Flags.BoolVar(&config.SkipUnchanged, "skip-unchanged",
 		config.SkipUnchanged, "skip unchanged file or object with size for checksum")
 	putCmd.Flags.StringVar(&config.Checksum, "checksum",
@@ -72,11 +71,13 @@ func handlePut(config *Config, args []string) error {
 		[]string{"PutObject"})
 	if err != nil {
 		fmt.Printf("failed to new PBucket with err:%v\n", err)
+		return err
 	}
 
 	_, err = pb.PutObject(ctx, localFile, objectInfo.Key)
 	if err != nil {
 		fmt.Printf("failed to put local file %s to %s with err:%v\n", localFile, s3Key, err)
+		return err
 	}
 
 	fmt.Printf("successfully put local file %s to %s\n", localFile, s3Key)

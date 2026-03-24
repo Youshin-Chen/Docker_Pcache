@@ -2,9 +2,16 @@
 /data/
 /logs/
 /meta/
+/docker-data/
+/demo-data/
+/demo-download/
+/verify-data/
 
 .idea/
 target/
 .DS_Store
 *.iml
 pcmd/pcmd
+/pcmd/pcmd.exe
+/pcmd/hello.txt
+/pcmd/hello.out.txt

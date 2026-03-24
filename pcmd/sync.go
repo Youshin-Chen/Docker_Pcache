@@ -43,7 +43,7 @@ func CreateSyncCommand(config *Config) *Command {
 	syncCmd.Flags.BoolVar(&config.IsSmallFile, "small-file",
 		config.IsSmallFile, "size is less than block size, will take special method for performance.")
 	syncCmd.Flags.BoolVar(&config.SkipExisting, "skip-existing",
-		config.IsSmallFile, "skip existing file or object")
+		config.SkipExisting, "skip existing file or object")
 	syncCmd.Flags.BoolVar(&config.SkipUnchanged, "skip-unchanged",
 		config.SkipUnchanged, "skip unchanged file or object with size for checksum")
 	syncCmd.Flags.StringVar(&config.Checksum, "checksum",
@@ -59,7 +59,7 @@ func CreateSyncCommand(config *Config) *Command {
 
 func handleSync(config *Config, args []string) error {
 	if len(args) < 2 {
-		return fmt.Errorf("source local file and target s3 path are required")
+		return fmt.Errorf("source and target paths are required")
 	}
 
 	upload := true
@@ -114,10 +114,10 @@ func handleSync(config *Config, args []string) error {
 			return err
 		}
 
-		fmt.Printf("successfully sync local flolder %s to %s\n", localFolder, s3key)
+		fmt.Printf("successfully sync local folder %s to %s\n", localFolder, s3key)
 	} else {
 		pb, err := bucket.NewPBucketWithOptions(ctx, config.Endpoint, objectInfo.Bucket,
-			config.AK, config.SK, []string{"GetObject,ListObject"},
+			config.AK, config.SK, []string{"GetObject", "ListObject"},
 			//bucket.WithBlockSize(config.BlockSize),
 			bucket.WithBlockWorkerThreadNumber(config.BlockTheadNumber),
 			bucket.WithFileTaskThreadNumber(config.FileThreadNumber))
@@ -130,7 +130,7 @@ func handleSync(config *Config, args []string) error {
 			fmt.Printf("failed to get local file %s from %s with err:%v\n", localFolder, s3key, err)
 			return err
 		}
-		fmt.Printf("successfully sync %s to local flolder %s\n", s3key, localFolder)
+		fmt.Printf("successfully sync %s to local folder %s\n", s3key, localFolder)
 	}
 	return nil
 }

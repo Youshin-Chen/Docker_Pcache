@@ -16,6 +16,7 @@
 
 package com.cloud.pc.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,8 +61,12 @@ public class UrlProbe {
 
     public UrlProbe(String baseUrl, IUrlProbeFunction probeFunction) {
         List<String> urls = probeFunction.getUrlList(baseUrl);
-        for (String url : urls) {
-            urlList.add(new UrlStats(url, 0, true));
+        if (urls != null && !urls.isEmpty()) {
+            for (String url : urls) {
+                urlList.add(new UrlStats(url, 0, true));
+            }
+        } else if (StringUtils.isNotBlank(baseUrl)) {
+            urlList.add(new UrlStats(baseUrl, 0, true));
         }
         this.probeFunction = probeFunction;
         this.isRunning = new AtomicBoolean(false);
@@ -81,7 +86,7 @@ public class UrlProbe {
             return urlStats.url;
         }
         probe(false);
-        return null;
+        return StringUtils.trimToNull(baseUrl);
     }
 
     public void reportFail(String url) {

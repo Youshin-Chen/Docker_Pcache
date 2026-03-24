@@ -33,6 +33,17 @@ public class UrlProbeTest extends TestCase {
         }
     }
 
+    class TestFallbackPmsMgr implements UrlProbe.IUrlProbeFunction {
+        boolean available = false;
+
+        public List<String> getUrlList(String url) {
+            if (!available) {
+                return new ArrayList<>();
+            }
+            return new ArrayList<>(Arrays.asList(urlActive, urlSlow));
+        }
+    }
+
     @Test
     public void test_generateToken_parseToken() throws Exception {
         TestPmsMgr testPmsMgr = new TestPmsMgr();
@@ -62,5 +73,19 @@ public class UrlProbeTest extends TestCase {
         // the dead url will be probed
         activeUrls = probe.GetActiveUrls();
         Assert.assertEquals("active url should be 2",2, activeUrls.size());
+    }
+
+    @Test
+    public void test_fallback_to_base_url_when_probe_list_is_empty() {
+        TestFallbackPmsMgr mgr = new TestFallbackPmsMgr();
+        UrlProbe probe = new UrlProbe(urlActive, mgr);
+
+        Assert.assertEquals("should fallback to base URL when initial list is empty",
+                urlActive, probe.getUrl());
+
+        mgr.available = true;
+        probe.reportFail(urlActive);
+        Assert.assertEquals("should still have a usable URL after initial failure",
+                urlActive, probe.getUrl());
     }
 }

@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+.vscode
+target
+docker-data
+meta
+logs
+data
+docs/images
+sdk
+test
+**/target
+**/.DS_Store

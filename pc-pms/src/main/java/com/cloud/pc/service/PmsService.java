@@ -59,8 +59,8 @@ public class PmsService {
             if (Envs.enableWrite || StringUtils.isBlank(Envs.existingPmsUrls)) {
                 leader = true;
             }
-            PmsInfo PmsInfo = new PmsInfo(Envs.httpHeader +
-                    NetworkUtils.getLocalIpAddress(Envs.netWorkInterfaceName) + ":" + Envs.port + "/",
+            PmsInfo PmsInfo = new PmsInfo(ServiceUrlUtils.getServiceUrl(
+                    Envs.publicUrl, Envs.httpHeader, Envs.netWorkInterfaceName, Envs.port),
                     metaService.getVersion(), leader, new Date());
             pmsList.add(PmsInfo);
             if (StringUtils.isNotBlank(Envs.existingPmsUrls)) {

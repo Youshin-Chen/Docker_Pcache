@@ -1,0 +1,1 @@
+{"items":[{"id":1,"name":"demo-minio","prefix":"","featureFlags":0,"quotaCapacity":-1,"quotaBandwidth":-1,"quotaQps":-1,"policyTtl":"","policyPermission":"private","policyRouting":"{\"router\":{\"type\":\"OneRouter\"},\"bucketIds\":[1]}","description":"quickstart demo bucket","createTime":0,"updateTime":0,"accessTime":0}],"checksum":"","lastUpdateTime":0,"empty":false}

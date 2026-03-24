@@ -1,0 +1,1 @@
+{"items":[{"id":1,"name":"MINIO","region":"local","description":"quickstart minio","accessKey":"minioadmin","accessSecret":"minioadmin123","s3Endpoint":"http://localhost:9000","endpoint":"http://localhost:9000","internalEndpoint":"http://minio:9000","stsEndpoint":"http://minio:9000","cdnEndpoint":"","createTime":0,"updateTime":0}],"checksum":"","lastUpdateTime":0,"empty":false}

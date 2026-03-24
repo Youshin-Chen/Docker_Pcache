@@ -38,7 +38,7 @@ func CreateGetCommand(config *Config) *Command {
 	getCmd.Flags.BoolVar(&config.IsSmallFile, "small-file",
 		config.IsSmallFile, "size is less than block size, will take special method for performance.")
 	getCmd.Flags.BoolVar(&config.SkipExisting, "skip-existing",
-		config.IsSmallFile, "skip existing file or object")
+		config.SkipExisting, "skip existing file or object")
 	getCmd.Flags.BoolVar(&config.SkipUnchanged, "skip-unchanged",
 		config.SkipUnchanged, "skip unchanged file or object with size for checksum")
 	getCmd.Flags.StringVar(&config.Checksum, "checksum",
@@ -48,7 +48,7 @@ func CreateGetCommand(config *Config) *Command {
 
 func handleGet(config *Config, args []string) error {
 	if len(args) < 2 {
-		return fmt.Errorf("source local file and target s3 path are required")
+		return fmt.Errorf("source s3 path and target local file are required")
 	}
 	localFile := args[1]
 	s3Key := args[0]
@@ -63,11 +63,13 @@ func handleGet(config *Config, args []string) error {
 		[]string{"GetObject"})
 	if err != nil {
 		fmt.Printf("failed to new PBucket with err:%v\n", err)
+		return err
 	}
 
 	_, err = pb.GetObject(ctx, objectInfo.Key, localFile)
 	if err != nil {
 		fmt.Printf("failed to get %s to local file %s with err:%v\n", s3Key, localFile, err)
+		return err
 	}
 
 	fmt.Printf("successfully get %s to local file %s\n", s3Key, localFile)

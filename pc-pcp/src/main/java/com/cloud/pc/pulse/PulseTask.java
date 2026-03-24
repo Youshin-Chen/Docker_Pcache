@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,8 +64,8 @@ public class PulseTask implements Runnable, UrlProbe.IUrlProbeFunction{
             }
             url = FileUtils.mergePath(urlProbe.getUrl(), "api/v1/pms/pcp/pulse");
             PcpPulseInfo pulseInfo = new PcpPulseInfo();
-            pulseInfo.setHost(Envs.httpHeader + NetworkUtils.getLocalIpAddress(Envs.netWorkInterfaceName)
-                    + ":" + Envs.port + "/");
+            pulseInfo.setHost(ServiceUrlUtils.getServiceUrl(
+                    Envs.publicUrl, Envs.httpHeader, Envs.netWorkInterfaceName, Envs.port));
             pulseInfo.setTotalSize(Envs.availableSize);
             pulseInfo.setUsedSize(stat.getSize());
             pulseInfo.setFileCount(stat.getCount());
@@ -109,6 +111,29 @@ public class PulseTask implements Runnable, UrlProbe.IUrlProbeFunction{
         }
         return pmsInfos.stream()
                 .map(PmsInfo::getHost)
+                .map(this::normalizePmsProbeUrl)
+                .distinct()
                 .collect(Collectors.toList());
+    }
+
+    String normalizePmsProbeUrl(String discoveredUrl) {
+        String normalizedDiscoveredUrl = ServiceUrlUtils.normalizeUrl(discoveredUrl, Envs.httpHeader);
+        String normalizedBaseUrl = ServiceUrlUtils.normalizeUrl(Envs.pmsUrl, Envs.httpHeader);
+        if (isLoopbackUrl(normalizedDiscoveredUrl) && !isLoopbackUrl(normalizedBaseUrl)) {
+            return normalizedBaseUrl;
+        }
+        return normalizedDiscoveredUrl;
+    }
+
+    boolean isLoopbackUrl(String url) {
+        try {
+            String host = new URL(url).getHost();
+            return "localhost".equalsIgnoreCase(host)
+                    || "127.0.0.1".equals(host)
+                    || "::1".equals(host);
+        } catch (MalformedURLException e) {
+            LOG.warn("invalid url {}", url, e);
+            return false;
+        }
     }
 }
