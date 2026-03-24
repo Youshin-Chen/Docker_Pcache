@@ -33,9 +33,9 @@ public class SecretUtilsTest extends TestCase {
         String ak = "user1";
         String sk = SecretUtils.generatSecretKey();
         long expirationMs = 300000;
-        String token = SecretUtils.generateToken(ak, sk, expirationMs, null);
+        String token = SecretUtils.generateToken(ak, sk, expirationMs, claims);
 
         Claims parseClaims = SecretUtils.parseToken(token, sk);
-        Assert.assertEquals(parseClaims.get("email"), "user@example.com");
+        Assert.assertEquals("user@example.com", parseClaims.get("email"));
     }
 }

@@ -58,7 +58,7 @@ public class VendorController {
         try {
             OpsTrace.set("add-vendor");
             LOG.info("{} requester={} ak={} token={}", OpsTrace.get(), vendorRequester, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             pmsService.checkLeader();
             PcMeta pcMeta = vendorService.addVendor(vendorRequester.toVendor());
             LOG.info("{} successfully add vendor {}", OpsTrace.get(), pcMeta);
@@ -78,7 +78,7 @@ public class VendorController {
         try {
             OpsTrace.set("add-vendor-bucket");
             LOG.info("{} requester={} ak={} token={}", OpsTrace.get(), vbRequester, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             pmsService.checkLeader();
             PcMeta pcMeta = vendorService.addVendorBucket(vbRequester.toVendorBucket());
             LOG.info("{} successfully add vendor bucket {}", OpsTrace.get(), pcMeta);
@@ -97,7 +97,7 @@ public class VendorController {
         try {
             OpsTrace.set("list-vb");
             LOG.info("{} ak={} token={}", OpsTrace.get(), ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             List<VendorBucket> buckets = vendorService.listVendorBucket();
             LOG.info("{} success to get vendor bucket list {}", OpsTrace.get(), buckets);
             return ResponseEntity.ok(buckets);

@@ -59,7 +59,7 @@ public class SecretController {
         try {
             OpsTrace.set("add-secret");
             LOG.info("{} requester={} ak={} token={}", OpsTrace.get(), newSecretRequester, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             pmsService.checkLeader();
             Secret secret = secretService.newSecret(newSecretRequester);
             LOG.info("{} success", OpsTrace.get());
@@ -80,11 +80,8 @@ public class SecretController {
         try {
             OpsTrace.set("add-policy");
             LOG.info("{} requester={} ak={} token={}", OpsTrace.get(), iamPolicyRequester, ak, token);
-            Secret secret = secretService.checkToken(ak, token, null);
+            Secret secret = secretService.checkPmsAdmin(ak, token);
             pmsService.checkLeader();
-            if (secret != null) {
-                IamUtils.checkAction(JsonUtils.fromJson(secret.getIam(), IamPolicy.class), "pms:admin");
-            }
             secretService.newIamBucket(iamPolicyRequester);
             LOG.info("{} success", OpsTrace.get());
             return ResponseEntity.ok("ok");

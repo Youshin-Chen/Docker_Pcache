@@ -73,7 +73,7 @@ public class PcpController {
         try {
             OpsTrace.set("add-pcp");
             LOG.info("{} requester={} ak={} token={}", OpsTrace.get(), pcpAddRequester, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPcpAdmin(ak, token);
             pcpService.add(pcpAddRequester.toPCPInfo());
             LOG.info("{} success to add new PCP {}", OpsTrace.get(), pcpAddRequester);
             return ResponseEntity.ok("OK");
@@ -94,7 +94,7 @@ public class PcpController {
         try {
             OpsTrace.set("remove-pcp");
             LOG.info("{} host={} ak={} token={}", OpsTrace.get(), host, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPcpAdmin(ak, token);
             int cnt = pcpService.remove(host);
             if (cnt == 1) {
                 LOG.info("{} success to remove a PCP", OpsTrace.get());

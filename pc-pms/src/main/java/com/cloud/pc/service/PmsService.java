@@ -83,7 +83,7 @@ public class PmsService {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json;charset=UTF-8"); // 要求响应为 JSON
         headers.put("X-AK", Envs.ak);
-        headers.put("X-TOKEN", Envs.sk);
+        headers.put("X-TOKEN", SecretUtils.generateToken(Envs.ak, Envs.sk, 300*1000, null));
         return headers;
     }
 

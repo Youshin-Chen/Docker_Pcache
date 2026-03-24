@@ -18,6 +18,7 @@ package com.cloud.pc.service;
 
 import com.cloud.pc.config.Envs;
 import com.cloud.pc.iam.IamPolicy;
+import com.cloud.pc.iam.IamUtils;
 import com.cloud.pc.meta.Secret;
 import com.cloud.pc.iam.Statement;
 import com.cloud.pc.requester.IamBucketRequester;
@@ -61,7 +62,13 @@ public class SecretService {
         if (!Envs.enableToken) {
             return null;
         }
+        if (StringUtils.isBlank(ak) || StringUtils.isBlank(token)) {
+            throw new RuntimeException("missing ak/token");
+        }
         Secret secret = metaService.getSecret(ak);
+        if (secret == null || StringUtils.isBlank(secret.getSecretKey())) {
+            throw new RuntimeException("invalid ak");
+        }
         Claims tokenClaims = SecretUtils.parseToken(token, secret.getSecretKey());
         if (claims != null) {
             for (String key : claims.keySet()) {
@@ -71,6 +78,36 @@ public class SecretService {
             }
         }
         return secret;
+    }
+
+    public Secret checkPmsAdmin(String ak, String token) {
+        return checkAnyAction(ak, token, "pms:admin");
+    }
+
+    public Secret checkPcpAdmin(String ak, String token) {
+        return checkAnyAction(ak, token, "pcp:admin", "pms:admin");
+    }
+
+    public Secret checkAnyAction(String ak, String token, String... actions) {
+        Secret secret = checkToken(ak, token, null);
+        if (secret == null) {
+            return null;
+        }
+        if (actions == null || actions.length == 0) {
+            return secret;
+        }
+        IamPolicy iamPolicy = JsonUtils.fromJson(secret.getIam(), IamPolicy.class);
+        if (iamPolicy == null || iamPolicy.getStatements() == null) {
+            throw new RuntimeException("missing iam policy");
+        }
+        for (String action : actions) {
+            try {
+                IamUtils.checkAction(iamPolicy, action);
+                return secret;
+            } catch (RuntimeException ignored) {
+            }
+        }
+        throw new RuntimeException("IAM error: the AK does not have the required permissions");
     }
 
     public String getSK(String ak) {

@@ -59,7 +59,7 @@ public class PmsController {
         try {
             OpsTrace.set("pcp-pulse");
             LOG.info("{} info={} ak={} token={}", OpsTrace.get(), pulseInfo, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPcpAdmin(ak, token);
             pmsService.pcpPulse(pulseInfo);
             LOG.info("{} success", OpsTrace.get() );
             return ResponseEntity.ok("OK");
@@ -80,7 +80,7 @@ public class PmsController {
         try {
             OpsTrace.set("pms-pulse");
             LOG.info("{} receive pulse from {} ",  OpsTrace.get(), pmsPulseInfo);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             pmsService.receivePulse(pmsPulseInfo);
             LOG.info("{} success", OpsTrace.get());
             return ResponseEntity.ok("OK");
@@ -119,7 +119,7 @@ public class PmsController {
         LOG.info("{} dump all meta", OpsTrace.get());
         String respMsg;
         try {
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             String ret = metaService.dumpMeta(sync);
             LOG.info("{} success", OpsTrace.get());
             return ResponseEntity.ok(ret);
@@ -141,7 +141,7 @@ public class PmsController {
         try {
             OpsTrace.set("enable-leader");
             LOG.info("{} enableLeader={} ak={} token={}", OpsTrace.get(), enableLeader, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             pmsService.enableLeader(enableLeader);
             LOG.info("{} success", OpsTrace.get() );
             return ResponseEntity.ok("OK");

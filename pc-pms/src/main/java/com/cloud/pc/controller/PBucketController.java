@@ -136,7 +136,7 @@ public class PBucketController {
         try {
             OpsTrace.set("add-bucket");
             LOG.info("{} requester={} ak={} token={}", OpsTrace.get(), pbRequester, ak, token);
-            secretService.checkToken(ak, token, null);
+            secretService.checkPmsAdmin(ak, token);
             pmsService.checkLeader();
             PcMeta pcMeta = pbService.addPBucket(pbRequester.toPBucket());
             LOG.info("{} successfully add bucket {}", OpsTrace.get(), pcMeta);

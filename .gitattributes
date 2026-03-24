@@ -12,5 +12,6 @@ docker-compose*.yml text eol=lf
 *.xml text eol=lf
 *.properties text eol=lf
 *.env text eol=lf
+*.env.example text eol=lf
 docker/*.ps1 text eol=lf
 docker/quickstart/meta/* text eol=lf
