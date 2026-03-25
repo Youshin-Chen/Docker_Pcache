@@ -2,6 +2,8 @@
 
 这份文档放在仓库根目录，作用只有一个：给后来接手这个项目的人一个清晰入口，知道应该去哪里看对应的说明。
 
+原始项目地址是 `https://github.com/yangagile/pcache/tree/main`，当前这个仓库是在原始项目基础上补充了 Docker 部署相关内容，同时保留了原始项目结构和文档。
+
 注意：
 
 - `README.md`
@@ -42,6 +44,7 @@
 
 - `docs-custom/README_troubleshooting_windows_quickstart.md`
 - `docs-custom/README_issue_log_windows_auth.md`
+- `docs-custom/README_multi_pms_native_and_docker.md`
 
 ## 4. 我想按项目原始方式在 Ubuntu / Linux 上部署
 
@@ -58,6 +61,7 @@
 如果你要看多节点相关说明，再继续看：
 
 5. `docs/cn/multi-pms.md`
+6. `docs-custom/README_multi_pms_native_and_docker.md`
 
 ## 5. 我想看 pcmd 的使用方式
 
@@ -93,6 +97,7 @@ Java SDK：
 - `docs-custom/README_choose_ubuntu_or_docker.md`
 - `docs-custom/README_one_click_windows.md`
 - `docs-custom/README_auth_mode_windows.md`
+- `docs-custom/README_multi_pms_native_and_docker.md`
 - `docs-custom/README_troubleshooting_windows_quickstart.md`
 - `docs-custom/README_issue_log_windows_auth.md`
 - `docs-custom/README_submit_checklist.md`

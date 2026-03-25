@@ -6,6 +6,7 @@
 /demo-data/
 /demo-download/
 /verify-data/
+/multi-pms/
 
 .idea/
 target/

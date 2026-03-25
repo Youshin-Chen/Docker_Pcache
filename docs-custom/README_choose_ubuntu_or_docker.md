@@ -2,6 +2,8 @@
 
 本文档用于帮助后来接手这个仓库的人快速判断：应该走 `Ubuntu 原生部署`，还是走当前仓库补充的 `Docker quickstart`。
 
+原始项目地址是 `https://github.com/yangagile/pcache/tree/main`，当前这个仓库是在原始项目基础上补充了 Docker 部署相关内容，同时保留了原始项目结构和文档。
+
 - 原始项目文档保持不动
 - 本文档只作为入口导航和选择建议
 - 如果只是想先把项目跑起来，优先看这份
@@ -51,6 +53,7 @@
 
 - Windows 一键 quickstart: `docs-custom/README_one_click_windows.md`
 - Windows 认证模式: `docs-custom/README_auth_mode_windows.md`
+- 多 PMS 验证记录: `docs-custom/README_multi_pms_native_and_docker.md`
 - Windows 问题排查: `docs-custom/README_troubleshooting_windows_quickstart.md`
 - 本次问题汇总: `docs-custom/README_issue_log_windows_auth.md`
 
@@ -91,6 +94,7 @@ docker compose up -d --build
 - Meta 说明: `docs/cn/meta.md`
 - MinIO 操作: `docs/cn/minio_ops.md`
 - 多 PMS 说明: `docs/cn/multi-pms.md`
+- 多 PMS 实际验证记录: `docs-custom/README_multi_pms_native_and_docker.md`
 
 ### Ubuntu 原生部署的大致路径
 

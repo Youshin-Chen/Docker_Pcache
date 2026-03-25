@@ -1,0 +1,34 @@
+services:
+  pms:
+    environment:
+      PMS_PUBLIC_URL: "http://pms:8080/"
+
+  pms2:
+    build:
+      context: .
+      dockerfile: Dockerfile.pms
+      args:
+        MAVEN_IMAGE: ${MAVEN_IMAGE:-maven:3.9-eclipse-temurin-21-noble}
+        JAVA_RUNTIME_IMAGE: ${JAVA_RUNTIME_IMAGE:-eclipse-temurin:21-jre-noble}
+    container_name: pcache-pms2
+    restart: unless-stopped
+    depends_on:
+      - pms
+    ports:
+      - "8081:8080"
+    environment:
+      PMS_PORT: "8080"
+      PMS_ENABLE_TOKEN: "${PMS_ENABLE_TOKEN:-false}"
+      PMS_ENABLE_WRITE: "false"
+      PMS_AK: "pms-admin"
+      PMS_SK: "QPAAmgJVWUTzrRC9lGDMRJo6mCd4XWK6+tolzsWmgO4="
+      PMS_META_LOADER: "file-loader"
+      PMS_META_DIR: "/opt/pcache/meta/"
+      PMS_LOG_DIR: "/opt/pcache/logs/"
+      PMS_EXISTING_URL: "http://pms:8080/"
+      PMS_PUBLIC_URL: "http://pms2:8080/"
+      PMS_HTTP_HEADER: "http://"
+      PMS_JAVA_OPTS: "-Xms128m -Xmx256m"
+    volumes:
+      - ./docker-data/multi-pms/pms2/meta:/opt/pcache/meta
+      - ./docker-data/multi-pms/pms2/logs:/opt/pcache/logs

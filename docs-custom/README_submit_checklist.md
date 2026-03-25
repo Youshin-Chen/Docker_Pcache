@@ -10,6 +10,7 @@
 - `.gitattributes`
 - `.gitignore`
 - `docker-compose.yml`
+- `docker-compose.multi-pms.yml`
 - `Dockerfile.pms`
 - `Dockerfile.pcp`
 
@@ -58,6 +59,7 @@
 - `docs-custom/README_one_click_windows.md`
 - `docs-custom/README_troubleshooting_windows_quickstart.md`
 - `docs-custom/README_auth_mode_windows.md`
+- `docs-custom/README_multi_pms_native_and_docker.md`
 - `docs-custom/README_issue_log_windows_auth.md`
 - `docs-custom/README_choose_ubuntu_or_docker.md`
 - `docs-custom/README_submit_checklist.md`
@@ -87,6 +89,7 @@ git add `
   .gitattributes `
   .gitignore `
   docker-compose.yml `
+  docker-compose.multi-pms.yml `
   Dockerfile.pms `
   Dockerfile.pcp `
   docker/pms-entrypoint.sh `
@@ -120,6 +123,7 @@ git add `
   docs-custom/README_one_click_windows.md `
   docs-custom/README_troubleshooting_windows_quickstart.md `
   docs-custom/README_auth_mode_windows.md `
+  docs-custom/README_multi_pms_native_and_docker.md `
   docs-custom/README_issue_log_windows_auth.md `
   docs-custom/README_choose_ubuntu_or_docker.md `
   docs-custom/README_submit_checklist.md
