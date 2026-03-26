@@ -111,11 +111,6 @@ Java SDK：
 3. 看 `docs-custom/README_one_click_windows.md`
 4. 跑通后再看 `docs-custom/README_auth_mode_windows.md`
 
-## 9. 我想做最终提交或发布前整理
-
-看这里：
-
-- `docs-custom/README_submit_checklist.md`
 
 ## 推荐阅读顺序
 
